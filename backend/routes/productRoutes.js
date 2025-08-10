@@ -1,0 +1,248 @@
+const express = require("express");
+const Product = require("../models/Product");
+const { protect, admin } = require("../middleware/authMiddleware");
+
+const router = express.Router();
+
+router.post("/", protect, async (req, res) => {
+  try {
+    const {
+      name,
+      desc,
+      price,
+      discountPrice,
+      countInStock,
+      category,
+      brand,
+      sizes,
+      colors,
+      collections,
+      material,
+      gender,
+      images,
+      isFeatured,
+      isPublished,
+      tags,
+      dimensions,
+      weight,
+      sku,
+    } = req.body;
+
+    const product = new Product({
+      name,
+      desc,
+      price,
+      discountPrice,
+      countInStock,
+      category,
+      brand,
+      sizes,
+      colors,
+      collections,
+      material,
+      gender,
+      images,
+      isFeatured,
+      isPublished,
+      tags,
+      dimensions,
+      weight,
+      sku,
+      user: req.user._id,
+    });
+
+    const createdProduct = await product.save();
+    res.status(201).json(createdProduct);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.put("/:id", protect, admin, async (req, res) => {
+  try {
+    const {
+      name,
+      desc,
+      price,
+      discountPrice,
+      countInStock,
+      category,
+      brand,
+      sizes,
+      colors,
+      collections,
+      material,
+      gender,
+      images,
+      isFeatured,
+      isPublished,
+      tags,
+      dimensions,
+      weight,
+      sku,
+    } = req.body;
+    const product = await Product.findById(req.params.id);
+    if (product) {
+      product.name = name || product.name;
+      product.desc = desc || product.desc;
+      product.price = price || product.price;
+      product.discountPrice = discountPrice || product.discountPrice;
+      product.countInStock = countInStock || product.countInStock;
+      product.category = category || product.category;
+      product.brand = brand || product.brand;
+      product.sizes = sizes || product.sizes;
+      product.colors = colors || product.colors;
+      product.collections = collections || product.collections;
+      product.material = material || product.material;
+      product.gender = gender || product.gender;
+      product.images = images || product.images;
+      product.isFeatured =
+        isFeatured !== undefined ? isFeatured : product.isFeatured;
+      product.isPublished =
+        isPublished !== undefined ? isPublished : product.isPublished;
+      product.tags = tags || product.tags;
+      product.dimensions = dimensions || product.dimensions;
+      product.weight = weight || product.weight;
+      product.sku = sku || product.sku;
+
+      const updatedProduct = await product.save();
+      res.json(updatedProduct);
+    } else {
+      res.status(404).json({ message: "Product not fouond" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.delete("/:id", protect, admin, async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (product) {
+      await product.deleteOne();
+      res.json({ message: "Product removed" });
+    } else {
+      res.status(404).send({ message: "Product not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    const {
+      collections,
+      size,
+      color,
+      gender,
+      minPrice,
+      maxPrice,
+      sortBy,
+      search,
+      material,
+      brand,
+      limit,
+      category,
+    } = req.query;
+
+    const query = {};
+
+    // Collections (array)
+    if (collections && collections.toLocaleLowerCase() !== "all") {
+      query.collections = collections;
+    }
+
+    // Sizes (array)
+    if (size) {
+      query.size = { $in: size.split(",") };
+    }
+
+    // Colors (array)
+    if (color) {
+      query.color = { $in: [color] };
+    }
+
+    // Gender
+    if (gender) {
+      query.gender = gender;
+    }
+
+    // Material
+    if (material) {
+      query.material = { $in: material.split(",") };
+    }
+
+    // Brand
+    if (brand) {
+      query.brand = { $in: brand.split(",") };
+    }
+
+    // Category
+    if (category && category.toLocaleLowerCase() !== "all") {
+      query.category = category;
+    }
+
+    // Price range
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.gte = Number(minPrice);
+      if (maxPrice) query.price.lte = Number(maxPrice);
+    }
+
+    // Sorting
+    let sort = {};
+
+    if (sortBy) {
+      switch (sortBy) {
+        case "priceAsc":
+          sort = { price: 1 };
+          break;
+        case "priceDesc":
+          sort = { price: -1 };
+          break;
+        case "popularity":
+          sort = { sold: -1 };
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // Fetch products
+    const products = await Product.find(query)
+      .sort(sort)
+      .limit(Number(limit) || 0);
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ message: "Product Not Found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+});
+
+module.exports = router;
