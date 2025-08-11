@@ -2,6 +2,7 @@ const express = require("express");
 const Product = require("../models/Product");
 const { protect, admin } = require("../middleware/authMiddleware");
 
+
 const router = express.Router();
 
 router.post("/", protect, async (req, res) => {
@@ -190,9 +191,9 @@ router.get("/", async (req, res) => {
     // Price range
     if (minPrice || maxPrice) {
       query.price = {};
-      if (minPrice) query.price.gte = Number(minPrice);
-      if (maxPrice) query.price.lte = Number(maxPrice);
-    }
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    } 
 
     // Sorting
     let sort = {};
@@ -228,6 +229,48 @@ router.get("/", async (req, res) => {
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.get("/best-seller", async (req, res) => {
+  try {
+    const bestSeller = await Product.findOne().sort({ rating: -1 });
+    if (bestSeller) {
+      res.json(bestSeller);
+    } else {
+      res.status(404).send({ message: "no best seller found!" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Server Error" });
+  }
+});
+
+router.get("/new-arrivals", async (req, res) => {
+  try {
+    const newArrivals = await Product.find().sort({ createdAt: -1 }).limit(8);
+    res.json(newArrivals);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.get("/similar/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    const similarProducts = await Product.find({
+      _id: { $ne: id },
+      gender: product.gender,
+      category: product.category,
+    }).limit(4);
+    res.json(similarProducts);
+  } catch (error) {
+    res.status(500).send({ message: "Server Error" });
   }
 });
 
