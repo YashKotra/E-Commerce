@@ -2,14 +2,13 @@ const express = require("express");
 const Product = require("../models/Product");
 const { protect, admin } = require("../middleware/authMiddleware");
 
-
 const router = express.Router();
 
 router.post("/", protect, async (req, res) => {
   try {
     const {
       name,
-      desc,
+      description,
       price,
       discountPrice,
       countInStock,
@@ -31,7 +30,7 @@ router.post("/", protect, async (req, res) => {
 
     const product = new Product({
       name,
-      desc,
+      description,
       price,
       discountPrice,
       countInStock,
@@ -64,7 +63,7 @@ router.put("/:id", protect, admin, async (req, res) => {
   try {
     const {
       name,
-      desc,
+      description,
       price,
       discountPrice,
       countInStock,
@@ -86,7 +85,7 @@ router.put("/:id", protect, admin, async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (product) {
       product.name = name || product.name;
-      product.desc = desc || product.desc;
+      product.description = description || product.description;
       product.price = price || product.price;
       product.discountPrice = discountPrice || product.discountPrice;
       product.countInStock = countInStock || product.countInStock;
@@ -160,14 +159,13 @@ router.get("/", async (req, res) => {
 
     // Sizes (array)
     if (size) {
-      query.size = { $in: size.split(",") };
+      query.sizes = { $in: size.split(",") };
     }
 
     // Colors (array)
     if (color) {
-      query.color = { $in: [color] };
+      query.colors = { $in: color.split(",") };
     }
-
     // Gender
     if (gender) {
       query.gender = gender;
@@ -193,7 +191,7 @@ router.get("/", async (req, res) => {
       query.price = {};
       if (minPrice) query.price.$gte = Number(minPrice);
       if (maxPrice) query.price.$lte = Number(maxPrice);
-    } 
+    }
 
     // Sorting
     let sort = {};

@@ -9,7 +9,7 @@ const cartItemSchema = new mongoose.Schema(
     },
     name: String,
     image: String,
-    price: String,        
+    price: Number,
     size: String,
     color: String,
     quantity: {
@@ -29,7 +29,7 @@ const cartSchema = new mongoose.Schema(
     guestId: {
       type: String,
     },
-    products: [cartItemSchema],   
+    products: [cartItemSchema],
     totalPrice: {
       type: Number,
       required: true,
