@@ -1,3 +1,5 @@
+// product.js:
+
 const products = [
   {
     name: "Classic Oxford Button-Down Shirt",

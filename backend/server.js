@@ -11,6 +11,8 @@ const orderRoutes = require("./routes/orderRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const subscriberRoutes = require("./routes/subscriberRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const productAdminRoutes = require("./routes/productAdminRoutes");
+const orderAdminRoutes = require("./routes/adminOrderRoutes");
 app.use(express.json());
 app.use(cors());
 
@@ -32,6 +34,9 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api", subscriberRoutes);
 app.use("/api/admin/users", adminRoutes);
+app.use("/api/admin/products", productAdminRoutes);
+
+app.use("/api/admin/orders", orderAdminRoutes);
 app.listen(PORT, () => {
   console.log("listing on port", PORT);
 });

@@ -103,7 +103,7 @@ router.put("/", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/remove", async (req, res) => {
   const { productId, size, color, guestId, userId } = req.body;
   try {
     let cart = await getCart(userId, guestId);
