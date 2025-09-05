@@ -12,10 +12,10 @@ const OrderConfirmationPage = () => {
     if (checkout && checkout._id) {
       dispatch(clearCart());
       localStorage.removeItem("cart");
-    }else{
-      navigate("/my-order")
+    } else {
+      navigate("/my-orders");
     }
-  },[checkout,dispatch,navigate]);
+  }, [checkout, dispatch, navigate]);
   const calculateEstimatedDelivery = (createdAt) => {
     const orderDate = new Date(createdAt);
     orderDate.setDate(orderDate.getDate() + 10);
@@ -33,23 +33,23 @@ const OrderConfirmationPage = () => {
             {/* Order ID and Date */}
             <div>
               <h2 className="text-xl font-semibold">
-                Order Id: {checkOut._id}
+                Order Id: {checkout._id}
               </h2>
               <p className="text-gray-700">
-                Order Date: {new Date(checkOut.createdAt).toLocaleDateString()}
+                Order Date: {new Date(checkout.createdAt).toLocaleDateString()}
               </p>
             </div>
             {/* Estimated Delivery */}
             <div>
               <p className="text-emerald-700 text-sm">
                 Estimated Delivery:{" "}
-                {calculateEstimatedDelivery(checkOut.createdAt)}
+                {calculateEstimatedDelivery(checkout.createdAt)}
               </p>
             </div>
           </div>
           {/* {Ordered Items} */}
           <div className="mb-20">
-            {checkout.checkoutItems.map((item) => (
+            {(checkout.orderItems || checkout.checkoutItems).map((item) => (
               <div
                 className="flex items-center justify-between mb-4"
                 key={item.productId}

@@ -15,7 +15,7 @@ const Signup = () => {
   const location = useLocation();
 
   // Select auth and cart slices from Redux store
-  const { user, guestId } = useSelector((state) => state.auth);
+  const { user, guestId, loading } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
 
   // Get redirect parameter from URL or default to "/"
@@ -107,7 +107,7 @@ const Signup = () => {
               type="submit"
               className="w-full p-3 text-white bg-black rounded-lg shadow-lg mt-6 hover:scale-105 transition duration-300 ease-in-out"
             >
-              REGISTER
+              {loading ? "Loading..." : "REGISTER"}
             </button>
           </form>
 

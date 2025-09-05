@@ -14,7 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { user, guestId } = useSelector((state) => state.auth);
+  const { user, guestId, loading } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
 
   // Get redirect param or default to "/"
@@ -87,7 +87,7 @@ const Login = () => {
               type="submit"
               className="w-full p-3 text-white bg-black rounded-lg shadow-lg mt-6 hover:scale-105 transition duration-300 ease-in-out"
             >
-              SIGN IN
+              {loading ? "Loading..." : "SIGN IN"}
             </button>
           </form>
 

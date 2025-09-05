@@ -4,6 +4,8 @@ import { FaTachometerAlt, FaUsers, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { FaBoxOpen, FaClipboardList, FaStore } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../redux/slice/cartSlice";
+import { logout } from "../../redux/slice/authSlice";
+
 const AdminSidebar = ({ toggleSideBar }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);

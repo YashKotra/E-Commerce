@@ -46,33 +46,49 @@ const MyOrdersPage = () => {
           <tbody className="divide-y divide-gray-200">
             {orders.map((order) => (
               <tr
-                key={order.id}
-                onClick={() => handleRowClick(order.id)}
+                key={order._id}
+                onClick={() => handleRowClick(order._id)}
                 className="border-b hover:border-gray-50 cursor-pointer"
               >
+                {/* First product image */}
                 <td className="px-4 py-2 text-sm">
                   <img
-                    src={order.img}
+                    src={order.orderItems[0]?.image}
                     alt="order"
                     className="w-24 h-20 object-cover rounded-md"
                   />
                 </td>
-                <td className="px-4 py-2 text-sm">{order.id}</td>
-                <td className="px-4 py-2 text-sm">{order.date}</td>
-                <td className="px-4 py-2 text-sm">{order.address}</td>
-                <td className="px-4 py-2 text-sm">{order.items}</td>
-                <td className="px-4 py-2 text-sm">{order.total}</td>
+
+                {/* Order ID */}
+                <td className="px-4 py-2 text-sm">{order._id}</td>
+
+                {/* Created date */}
+                <td className="px-4 py-2 text-sm">
+                  {new Date(order.createdAt).toLocaleDateString()}
+                </td>
+
+                {/* Shipping Address */}
+                <td className="px-4 py-2 text-sm">
+                  {order.shippingAddress?.address},{" "}
+                  {order.shippingAddress?.city}
+                </td>
+
+                {/* Total items */}
+                <td className="px-4 py-2 text-sm">{order.orderItems.length}</td>
+
+                {/* Total Price */}
+                <td className="px-4 py-2 text-sm">₹{order.totalPrice}</td>
+
+                {/* Status */}
                 <td className="px-4 py-2 text-sm">
                   <span
                     className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                      order.status === "Delivered"
+                      order.isDelivered
                         ? "bg-green-100 text-green-800"
-                        : order.status === "Shipped"
-                        ? "bg-blue-100 text-blue-800"
                         : "bg-yellow-100 text-yellow-800"
                     }`}
                   >
-                    {order.status}
+                    {order.isDelivered ? "Delivered" : "Pending"}
                   </span>
                 </td>
               </tr>

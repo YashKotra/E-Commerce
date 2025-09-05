@@ -4,14 +4,16 @@ import RazorPayButton from "./RazorPayButton";
 import { useDispatch, useSelector } from "react-redux";
 import { createCheckout } from "../../redux/slice/checkoutSlice";
 import axios from "axios";
-
+import { setCheckout } from "../../redux/slice/checkoutSlice";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { checkout } = useSelector((state) => state.checkout);
+
   const { cart, loading, error } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.auth);
+  const [key, setKey] = useState("");
+  const [orderId, setOrderId] = useState("");
 
   const cartProducts = cart?.products || [];
 
@@ -53,8 +55,11 @@ const Checkout = () => {
             totalPrice: totalCharge,
           })
         );
-        if (res.payload && res.payload._id) {
-          setCheckoutId(res.payload._id);
+        if (res.payload && res.payload?.newCheckout?._id) {
+          setCheckoutId(res.payload?.newCheckout?._id);
+          const { id: orderId } = res.payload?.razorpayOrder;
+          setOrderId(orderId);
+          setKey(res.payload?.key);
         }
       } catch (err) {
         console.error("Checkout failed:", err);
@@ -64,9 +69,15 @@ const Checkout = () => {
 
   const handlePaymentSuccess = async (details) => {
     try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}pay`,
-        { paymentStatus: "paid", paymentDetails: details },
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`,
+        {
+          paymentStatus: "paid",
+          paymentDetails: details,
+          razorpay_order_id: details.razorpay_order_id,
+          razorpay_payment_id: details.razorpay_payment_id,
+          razorpay_signature: details.razorpay_signature,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -82,7 +93,7 @@ const Checkout = () => {
 
   const handleFinalizeCheckout = async (checkoutId) => {
     try {
-      const response = await axios.put(
+      const response = await axios.post(
         `${
           import.meta.env.VITE_BACKEND_URL
         }/api/checkout/${checkoutId}/finalize`,
@@ -93,6 +104,8 @@ const Checkout = () => {
           },
         }
       );
+      const finalOrder = response.data;
+      dispatch(setCheckout(finalOrder));
       navigate("/order-confirmation");
     } catch (error) {
       console.error("Finalize checkout error:", error);
@@ -273,10 +286,10 @@ const Checkout = () => {
               <div>
                 <h2 className="text-lg mb-4">Pay with RazorPay</h2>
                 <RazorPayButton
-                  amount={checkout?.amount / 100} // Convert paisa to INR
-                  orderId={checkout?.razorpayOrderId}
-                  razorpayKey={checkout?.razorpayKey}
+                  amount={totalCharge * 100}
                   onSuccess={handlePaymentSuccess}
+                  razorpayKey={key}
+                  orderId={orderId}
                   onError={() => alert("Payment Failed. Try Again.")}
                 />
               </div>

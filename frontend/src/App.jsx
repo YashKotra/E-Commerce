@@ -14,7 +14,7 @@ import MyOrdersPage from "./Pages/MyOrdersPage";
 import AdminLayout from "./Components/Admin/AdminLayout";
 import UserManagement from "./Components/Admin/UserManagement";
 import ProductManagement from "./Components/Admin/ProductManagement";
-import AdminHomePage from "./Components/Admin/AdminHomePage"; // <-- import this
+import AdminHomePage from "./Components/Admin/AdminHomePage"; 
 import EditProductPage from "./Components/Admin/EditProductPage";
 import OrderManagement from "./Components/Admin/OrderManagement";
 import ProtectedRoute from "./Components/Common/ProtectedRoute";
