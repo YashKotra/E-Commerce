@@ -1,34 +1,21 @@
-const checkOut = {
-  _id: "12121",
-  createdAt: new Date(),
-  checkoutItems: [
-    {
-      productId: "p001",
-      name: "Classic White T-Shirt",
-      color: "White",
-      size: "M",
-      price: 19.99,
-      quantity: 2,
-      image: "https://picsum.photos/150?random=1",
-    },
-    {
-      productId: "p002",
-      name: "Blue Denim Jeans",
-      color: "Blue",
-      size: "32",
-      price: 49.99,
-      quantity: 1,
-      image: "https://picsum.photos/150?random=2",
-    },
-  ],
-  shippingAddress: {
-    address: "123 Main Street",
-    city: "New York",
-    country: "USA",
-  },
-};
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../redux/slice/cartSlice";
 
 const OrderConfirmationPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { checkout } = useSelector((state) => state.checkout);
+
+  useEffect(() => {
+    if (checkout && checkout._id) {
+      dispatch(clearCart());
+      localStorage.removeItem("cart");
+    }else{
+      navigate("/my-order")
+    }
+  },[checkout,dispatch,navigate]);
   const calculateEstimatedDelivery = (createdAt) => {
     const orderDate = new Date(createdAt);
     orderDate.setDate(orderDate.getDate() + 10);
@@ -40,7 +27,7 @@ const OrderConfirmationPage = () => {
       <h1 className="text-4xl font-bold text-center text-emerald-700 mb-8">
         Thank You for Your Order!
       </h1>
-      {checkOut && (
+      {checkout && (
         <div className="p-6 rounded-lg border">
           <div className="flex justify-between mb-20">
             {/* Order ID and Date */}
@@ -62,7 +49,7 @@ const OrderConfirmationPage = () => {
           </div>
           {/* {Ordered Items} */}
           <div className="mb-20">
-            {checkOut.checkoutItems.map((item) => (
+            {checkout.checkoutItems.map((item) => (
               <div
                 className="flex items-center justify-between mb-4"
                 key={item.productId}
@@ -96,11 +83,11 @@ const OrderConfirmationPage = () => {
             <div>
               <h4 className="text-lg font-semibold mb-2">Delivery</h4>
               <p className="text-gray-600">
-                {checkOut.shippingAddress.address}
+                {checkout.shippingAddress.address}
               </p>
               <p className="text-gray-600">
-                {checkOut.shippingAddress.city},{" "}
-                {checkOut.shippingAddress.country}
+                {checkout.shippingAddress.city},{" "}
+                {checkout.shippingAddress.country}
               </p>
             </div>
           </div>

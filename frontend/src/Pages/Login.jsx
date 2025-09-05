@@ -1,29 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+
 import LoginImg from "../../src/assets/login.webp";
+import { loginUser } from "../redux/slice/authSlice";
+import { mergeCart } from "../redux/slice/cartSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleEmail = (event) => {
-    setEmail(event.target.value);
-  };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handlePassword = (event) => {
-    setPassword(event.target.value);
-  };
+  const { user, guestId } = useSelector((state) => state.auth);
+  const { cart } = useSelector((state) => state.cart);
+
+  // Get redirect param or default to "/"
+  const redirectParam =
+    new URLSearchParams(location.search).get("redirect") || "/";
+  const isCheckoutRedirect = redirectParam.includes("checkout");
+
+  useEffect(() => {
+    if (user) {
+      if (cart?.products.length > 0 && guestId) {
+        dispatch(mergeCart({ guestId, user })).then(() =>
+          navigate(isCheckoutRedirect ? "/checkout" : "/")
+        );
+      } else {
+        navigate(isCheckoutRedirect ? "/checkout" : "/");
+      }
+    }
+  }, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log({ email, password });
+    dispatch(loginUser({ email, password }));
   };
+
   return (
-    <div className="flex mb-4 ">
+    <div className="flex mb-4">
       {/* Left: Form Section */}
       <div className="w-full lg:w-1/2 flex items-center justify-center bg-white px-2">
         <div className="max-w-md w-full p-4 bg-white rounded-3xl shadow-md text-center">
           <h1 className="pb-6 font-bold text-3xl text-gray-800">Sign In</h1>
 
-          <form className="space-y-4" method="post" onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="text-left">
               <label
                 htmlFor="email"
@@ -38,7 +61,7 @@ const Login = () => {
                 required
                 className="w-full p-3 border rounded-lg shadow-md border-gray-300 placeholder:text-base focus:scale-105 transition duration-300 ease-in-out"
                 value={email}
-                onChange={handleEmail}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
@@ -54,8 +77,8 @@ const Login = () => {
                 type="password"
                 placeholder="Password"
                 required
-                onChange={handlePassword}
                 value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-3 border rounded-lg shadow-md border-gray-300 placeholder:text-base focus:scale-105 transition duration-300 ease-in-out"
               />
             </div>
@@ -68,18 +91,16 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Log In Link */}
+          {/* Register Link */}
           <div className="flex flex-col items-center justify-center mt-4 text-sm">
             <p>
-              <span className="text-gray-600">Don't have an account?</span>
-              <a
-                href="/signup"
-                className="ml-1 text-blue-400 group transition-all duration-100 ease-in-out"
+              <span className="text-gray-600">Don't have an account? </span>
+              <Link
+                className="text-blue-500 hover:underline"
+                to={`/register?redirect=${encodeURIComponent(redirectParam)}`}
               >
-                <span className="bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                  Register
-                </span>
-              </a>
+                Register
+              </Link>
             </p>
           </div>
 
@@ -113,23 +134,14 @@ const Login = () => {
           <div className="mt-4 text-sm text-gray-500 text-center">
             <p>
               By signing in, you agree to our{" "}
-              <a
-                href="#"
-                className="text-blue-400 group transition-all duration-100 ease-in-out"
-              >
-                <span className="bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                  Terms
-                </span>
+              <a href="#" className="text-blue-400 hover:underline">
+                Terms
               </a>{" "}
               and{" "}
-              <a
-                href="#"
-                className="text-blue-400 group transition-all duration-100 ease-in-out"
-              >
-                <span className="bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                  Privacy Policy
-                </span>
+              <a href="#" className="text-blue-400 hover:underline">
+                Privacy Policy
               </a>
+              .
             </p>
           </div>
         </div>

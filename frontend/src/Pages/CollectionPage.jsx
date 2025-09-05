@@ -3,8 +3,20 @@ import { FaFilter } from "react-icons/fa";
 import FilterSidebar from "../Components/Products/FilterSidebar";
 import SortOptions from "../Components/Products/SortOptions";
 import ProductGrid from "../Components/Products/ProductGrid";
+import { useParams, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductsByFilters } from "../redux/slice/productSlice";
 const CollectionPage = () => {
+  const { collection } = useParams();
+  const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state) => state.products);
+  const queryParams = Object.fromEntries([...searchParams]);
   const SideBarRef = useRef(null);
+
+  useEffect(() => {
+    dispatch(fetchProductsByFilters({ collection, ...queryParams }));
+  }, [dispatch, collection, searchParams]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -21,89 +33,6 @@ const CollectionPage = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  const [products, setProducts] = useState([
-    {
-      _id: 1,
-      name: "Product 1",
-      price: 1000,
-      images: [
-        {
-          url: "https://images.unsplash.com/photo-1513094735237-8f2714d57c13?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-      ],
-    },
-    {
-      _id: 2,
-      name: "Product 2",
-      price: 1200,
-      images: [
-        {
-          url: "https://images.unsplash.com/photo-1618244972963-dbee1a7edc95?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-      ],
-    },
-    {
-      _id: 3,
-      name: "Product 3",
-      price: 950,
-      images: [
-        {
-          url: "https://images.unsplash.com/photo-1584998316204-3b1e3b1895ae?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-      ],
-    },
-    {
-      _id: 4,
-      name: "Product 4",
-      price: 1100,
-      images: [
-        {
-          url: "https://plus.unsplash.com/premium_photo-1661597265308-934005c78491?q=80&w=820&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-      ],
-    },
-    {
-      _id: 5,
-      name: "Product 1",
-      price: 1000,
-      images: [
-        {
-          url: "https://images.unsplash.com/photo-1513094735237-8f2714d57c13?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-      ],
-    },
-    {
-      _id: 6,
-      name: "Product 2",
-      price: 1200,
-      images: [
-        {
-          url: "https://images.unsplash.com/photo-1618244972963-dbee1a7edc95?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-      ],
-    },
-    {
-      _id: 7,
-      name: "Product 3",
-      price: 950,
-      images: [
-        {
-          url: "https://images.unsplash.com/photo-1584998316204-3b1e3b1895ae?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-      ],
-    },
-    {
-      _id: 8,
-      name: "Product 4",
-      price: 1100,
-      images: [
-        {
-          url: "https://plus.unsplash.com/premium_photo-1661597265308-934005c78491?q=80&w=820&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-      ],
-    },
-  ]);
 
   return (
     <div className="flex flex-col lg:flex-row">
@@ -131,7 +60,7 @@ const CollectionPage = () => {
         <SortOptions />
 
         {/* Product Grid */}
-        <ProductGrid products={products} />
+        <ProductGrid products={products} loading={loading} error={error} />
       </div>
     </div>
   );

@@ -1,17 +1,22 @@
-// RazorPayButton.jsx
 import React from "react";
 
-const RazorPayButton = ({ amount, onSuccess, onError }) => {
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 
+const RazorPayButton = ({
+  amount,
+  orderId,
+  razorpayKey, // use the key passed from parent
+  onSuccess,
+  onError,
+}) => {
   const handleRazorpay = async () => {
     const res = await loadRazorpayScript();
 
@@ -20,26 +25,23 @@ const RazorPayButton = ({ amount, onSuccess, onError }) => {
       return;
     }
 
-    // Simulated hardcoded order response (normally from backend)
-    const order = {
-      id: "order_LvY6vXpB1o1aAa", // fake order_id from Razorpay
-      amount: amount * 100, // Razorpay expects amount in paisa
-      currency: "INR",
-    };
+    if (!window.Razorpay) {
+      alert("Razorpay SDK not available");
+      return;
+    }
 
     const options = {
-      key: "rzp_test_YourTestKeyHere", // Replace with your Razorpay Test Key
-      amount: order.amount,
-      currency: order.currency,
-      name: "Demo Company Pvt. Ltd.",
+      key: razorpayKey, // Use key passed from props here
+      amount: amount, // amount in paisa, no need to multiply here
+      currency: "INR",
+      name: "Clothing Company Pvt. Ltd.",
       description: "Test Payment",
-      order_id: order.id,
+      order_id: orderId,
       handler: function (response) {
-        console.log("Payment Success:", response);
         onSuccess(response);
       },
       prefill: {
-        name: "John Doe",
+        name: "John Doe", // ideally replace with logged-in user info
         email: "john@example.com",
         contact: "9876543210",
       },
@@ -52,10 +54,12 @@ const RazorPayButton = ({ amount, onSuccess, onError }) => {
     };
 
     const rzp = new window.Razorpay(options);
+
     rzp.on("payment.failed", function (response) {
       console.error("Payment Failed:", response.error);
       onError(response);
     });
+
     rzp.open();
   };
 
@@ -64,35 +68,9 @@ const RazorPayButton = ({ amount, onSuccess, onError }) => {
       onClick={handleRazorpay}
       className="w-full bg-emerald-600 text-white px-6 py-2 rounded hover:bg-emerald-700"
     >
-      Pay ₹{amount}
+      Pay ₹{(amount / 100).toFixed(2)}
     </button>
   );
 };
 
-// Test simulation component
-const TestRazorPayComponent = () => {
-  const handlePaymentSuccess = (response) => {
-    alert("Payment Successful!");
-    console.log("Razorpay Success Response:", response);
-  };
-
-  const handlePaymentFailure = (response) => {
-    alert("Payment Failed.");
-    console.log("Razorpay Failure Response:", response);
-  };
-
-  return (
-    <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow">
-      <h1 className="text-2xl font-semibold mb-4">
-        Simulated Razorpay Checkout
-      </h1>
-      <RazorPayButton
-        amount={500} // ₹500
-        onSuccess={handlePaymentSuccess}
-        onError={handlePaymentFailure}
-      />
-    </div>
-  );
-};
-
-export default TestRazorPayComponent;
+export default RazorPayButton;

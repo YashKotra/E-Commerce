@@ -1,9 +1,11 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 const NewArrivals = () => {
   const scrollRef = useRef(null);
+  const [newArrivals, setNewArrivals] = useState([]);
 
   const handleScroll = (direction) => {
     if (scrollRef.current) {
@@ -15,96 +17,20 @@ const NewArrivals = () => {
     }
   };
 
-  const newArrivals = [
-    {
-      _id: "1",
-      name: "Stylish Jacket",
-      price: "1200",
-      images: [
-        {
-          url: "https://st2.depositphotos.com/3647147/11714/i/950/depositphotos_117141824-stock-photo-hot-summer-girl-beauty-sexy.jpg",
-          altText: "Stylish Jacket",
-        },
-      ],
-    },
-    {
-      _id: "2",
-      name: "Denim Shirt",
-      price: "900",
-      images: [
-        {
-          url: "https://thumbs.dreamstime.com/b/woman-posing-photographers-to-make-street-style-pictures-showing-her-clothes-wearing-streets-amsterdam-128967542.jpg",
-          altText: "Denim Shirt",
-        },
-      ],
-    },
-    {
-      _id: "3",
-      name: "Casual Sneakers",
-      price: "1500",
-      images: [
-        {
-          url: "https://www.shutterstock.com/image-photo/fashion-girl-sequin-golden-dress-600nw-2489538389.jpg",
-          altText: "Casual Sneakers",
-        },
-      ],
-    },
-    {
-      _id: "4",
-      name: "Leather Boots",
-      price: "2500",
-      images: [
-        {
-          url: "https://images.pexels.com/photos/29669206/pexels-photo-29669206.jpeg?cs=srgb&dl=pexels-ekoagalarov-29669206.jpg&fm=jpg",
-          altText: "Leather Boots",
-        },
-      ],
-    },
-    {
-      _id: "5",
-      name: "Graphic T-Shirt",
-      price: "600",
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=5",
-          altText: "Graphic T-Shirt",
-        },
-      ],
-    },
-    {
-      _id: "6",
-      name: "Slim Fit Jeans",
-      price: "1100",
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=6",
-          altText: "Slim Fit Jeans",
-        },
-      ],
-    },
-    {
-      _id: "7",
-      name: "Woolen Scarf",
-      price: "500",
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=7",
-          altText: "Woolen Scarf",
-        },
-      ],
-    },
-    {
-      _id: "8",
-      name: "Classic Hoodie",
-      price: "1300",
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=8",
-          altText: "Classic Hoodie",
-        },
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchNewArrivals = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/products/new-arrivals`
+        );
+        setNewArrivals(response.data);
+      } catch (error) {
+        console.error("Error fetching new arrivals:", error);
+      }
+    };
+
+    fetchNewArrivals();
+  }, []);
 
   return (
     <section className="py-16 px-4 lg:px-0">
@@ -138,26 +64,30 @@ const NewArrivals = () => {
           ref={scrollRef}
           className="flex overflow-x-scroll scroll-smooth space-x-6 px-4 hide-scroll-bar"
         >
-          {newArrivals.map((product) => (
-            <div
-              key={product._id}
-              className="relative min-w-[100%] sm:min-w-[50%] lg:min-w-[30%] relative"
-            >
-              <img
-                src={product.images[0]?.url}
-                alt={product.images[0]?.altText || product.name}
-                className="w-full h-[500px] object-cover rounded-lg"
-                draggable="false"
-              />
+          {newArrivals.length === 0 ? (
+            <p className="text-center w-full py-10 text-gray-500">Loading new arrivals...</p>
+          ) : (
+            newArrivals.map((product) => (
+              <div
+                key={product._id}
+                className="relative min-w-[100%] sm:min-w-[50%] lg:min-w-[30%]"
+              >
+                <img
+                  src={product.images[0]?.url}
+                  alt={product.images[0]?.altText || product.name}
+                  className="w-full h-[500px] object-cover rounded-lg"
+                  draggable="false"
+                />
 
-              <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-md text-white p-4 rounded-b-lg">
-                <Link to={`/product/₹{product._id}`} className="block">
-                  <h4 className="font-medium">{product.name}</h4>
-                  <p className="mt-1">₹{product.price}</p>
-                </Link>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-md text-white p-4 rounded-b-lg">
+                  <Link to={`/product/${product._id}`} className="block">
+                    <h4 className="font-medium">{product.name}</h4>
+                    <p className="mt-1">₹{product.price}</p>
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </section>

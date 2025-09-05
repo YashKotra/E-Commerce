@@ -1,48 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { fetchOrderDetails } from "../redux/slice/orderSlice";
 
 const OrderDetails = () => {
   const { id } = useParams();
-  const [orderDetails, setOrderDetails] = useState(null);
+  const dispatch = useDispatch();
+  const { orderDetails, loading, error } = useSelector((state) => state.orders);
 
   useEffect(() => {
-    const mockOrderDetails = {
-      _id: "user123",
-      createdAt: new Date().toISOString(),
-      isPaid: true,
-      isDelivered: false,
-      paymentMethod: "RazorPay",
-      shippingMethod: "standard",
-      shippingAddress: {
-        fullName: "John Doe",
-        address: "123 Main Street",
-        city: "Metropolis",
-        postalCode: "123456",
-        country: "India",
-      },
-      orderItems: [
-        {
-          productId: "prod001",
-          name: "Wireless Mouse",
-          price: 799,
-          quantity: 2,
-          image:
-            "https://images.unsplash.com/photo-1513094735237-8f2714d57c13?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-          productId: "prod002",
-          name: "Mechanical Keyboard",
-          price: 2999,
-          quantity: 1,
-          image:
-            "https://images.unsplash.com/photo-1513094735237-8f2714d57c13?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-      ],
-    };
-    setOrderDetails(mockOrderDetails);
-  }, [id]);
+    dispatch(fetchOrderDetails(id));
+  }, [dispatch, id]);
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
       <h2 className="text-2xl md:text-3xl font-bold mb-6">Order Details</h2>

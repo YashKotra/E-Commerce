@@ -1,58 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { fetchUserOrders } from "../redux/slice/orderSlice";
 const MyOrdersPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { orders, loading, error } = useSelector((state) => state.orders);
+
+  useEffect(() => {
+    dispatch(fetchUserOrders());
+  }, [dispatch]);
 
   const handleRowClick = (orderId) => {
     navigate(`/order/${orderId}`);
   };
-  const [orders, setOrders] = useState([
-    {
-      img: "https://picsum.photos/400/300?random=1",
-      id: "ORD3412",
-      date: "2025-07-21",
-      address: "123 Main St, Springfield, IL",
-      items: 2,
-      total: "$78.45",
-      status: "Delivered",
-    },
-    {
-      img: "https://picsum.photos/400/300?random=2",
-      id: "ORD3413",
-      date: "2025-07-18",
-      address: "456 Oak Ave, Brooklyn, NY",
-      items: 4,
-      total: "$145.99",
-      status: "Shipped",
-    },
-    {
-      img: "https://picsum.photos/400/300?random=3",
-      id: "ORD3414",
-      date: "2025-07-16",
-      address: "789 Pine St, Austin, TX",
-      items: 1,
-      total: "$39.90",
-      status: "Processing",
-    },
-    {
-      img: "https://picsum.photos/400/300?random=4",
-      id: "ORD3415",
-      date: "2025-07-10",
-      address: "102 Maple Dr, Seattle, WA",
-      items: 3,
-      total: "$92.75",
-      status: "Cancelled",
-    },
-    {
-      img: "https://picsum.photos/400/300?random=5",
-      id: "ORD3416",
-      date: "2025-07-09",
-      address: "55 Elm Rd, Miami, FL",
-      items: 5,
-      total: "$159.20",
-      status: "Delivered",
-    },
-  ]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">

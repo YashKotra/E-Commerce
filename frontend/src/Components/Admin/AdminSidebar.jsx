@@ -2,11 +2,16 @@ import React from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { FaTachometerAlt, FaUsers, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { FaBoxOpen, FaClipboardList, FaStore } from "react-icons/fa6";
-
+import { useDispatch, useSelector } from "react-redux";
+import { clearCart } from "../../redux/slice/cartSlice";
 const AdminSidebar = ({ toggleSideBar }) => {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
+    dispatch(logout());
+    dispatch(clearCart());
     navigate("/");
   };
 

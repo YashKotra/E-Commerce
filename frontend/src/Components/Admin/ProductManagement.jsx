@@ -1,56 +1,30 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchAdminProducts, deleteProduct } from "../../redux/slice/adminProductSlice";
 
 const ProductManagement = () => {
-  const [products, setProducts] = useState([
-    {
-      _id: "101",
-      name: "Classic White T-Shirt",
-      description: "100% cotton comfortable white t-shirt.",
-      price: 19.99,
-      category: "T-Shirts",
-      stock: 50,
-    },
-    {
-      _id: "102",
-      name: "Blue Denim Jeans",
-      description: "Slim fit blue denim jeans with stretch fabric.",
-      price: 49.99,
-      category: "Jeans",
-      stock: 30,
-    },
-    {
-      _id: "103",
-      name: "Black Leather Jacket",
-      description: "Stylish black leather jacket with zipper.",
-      price: 149.99,
-      category: "Jackets",
-      stock: 15,
-    },
-    {
-      _id: "104",
-      name: "Red Hoodie",
-      description: "Warm red hoodie with front pockets.",
-      price: 39.99,
-      category: "Hoodies",
-      stock: 40,
-    },
-    {
-      _id: "105",
-      name: "Running Sneakers",
-      description: "Lightweight running sneakers for daily workouts.",
-      price: 89.99,
-      category: "Footwear",
-      stock: 20,
-    },
-  ]);
+  const dispatch = useDispatch();
+
+  const { products, loading, error } = useSelector(
+    (state) => state.adminProducts
+  );
+
+  useEffect(() => {
+    dispatch(fetchAdminProducts());
+  }, [dispatch]);
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure want to delete the Product")) {
-      console.log("Delete Product with id", id);
+    if (window.confirm("Are you sure you want to delete the product?")) {
+      dispatch(deleteProduct(id));
     }
-    setProducts((prev) => prev.filter((product) => product._id !== id));
   };
+
+  if (loading)
+    return <p className="text-center py-6 text-blue-600">Loading...</p>;
+
+  if (error)
+    return <p className="text-center py-6 text-red-500">Error: {error}</p>;
 
   return (
     <div className="flex-1 p-6 overflow-y-auto h-screen">
@@ -68,31 +42,33 @@ const ProductManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr
-                key={product._id}
-                className="border-b hover:bg-gray-50 transition"
-              >
-                <td className="py-3 px-4">{product.name}</td>
-                <td className="py-3 px-4">${product.price.toFixed(2)}</td>
-                <td className="py-3 px-4">{product.stock}</td>
-                <td className="py-3 px-4 space-x-2">
-                  <Link
-                    to={`/admin/products/${product._id}/edit`}
-                    className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-300"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(product._id)}
-                    className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-400"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {products.length === 0 && (
+            {products.length > 0 ? (
+              products.map((product) => (
+                <tr
+                  key={product._id}
+                  className="border-b hover:bg-gray-50 transition"
+                >
+                  <td className="py-3 px-4">{product.name}</td>
+                  <td className="py-3 px-4">${product.price.toFixed(2)}</td>
+                  <td className="py-3 px-4">{product.stock}</td>
+                  <td className="py-3 px-4 space-x-2">
+                    <Link
+                      to={`/admin/products/${product._id}/edit`}
+                      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-300"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(product._id)}
+                      disabled={loading}
+                      className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-400 disabled:opacity-50"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td colSpan="4" className="text-center py-6 text-gray-500">
                   No products found.

@@ -1,29 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  fetchAllOrders,
+  updateOrderStatus,
+} from "../../redux/slice/adminOrderSlice";
 
 const OrderManagement = () => {
-  const orders = [
-    {
-      _id: 12211,
-      user: {
-        name: "John Doe",
-      },
-      totalPrice: 110,
-      status: "Processing",
-    },
-    {
-      _id: 12212,
-      user: {
-        name: "Jane Smith",
-      },
-      totalPrice: 220,
-      status: "Shipped",
-    },
-  ];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth);
+  const { orders, loading, error } = useSelector((state) => state.adminOrders);
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (user.role !== "admin") {
+      navigate("/");
+    } else {
+      dispatch(fetchAllOrders());
+    }
+  }, [dispatch, user, navigate]);
 
   const handleStatusChange = (orderId, status) => {
-    console.log({ id: orderId, status });
-    // Add actual update logic here (e.g., API call)
+    dispatch(updateOrderStatus({ id: orderId, status }));
   };
+
+  if (loading)
+    return <div className="text-center text-blue-600 py-6">Loading...</div>;
+
+  if (error)
+    return <div className="text-center text-red-500 py-6">Error: {error}</div>;
 
   return (
     <div className="max-w-7xl mx-auto p-6">
@@ -50,7 +58,7 @@ const OrderManagement = () => {
                   <td className="py-4 px-4 font-medium text-gray-900 whitespace-nowrap">
                     #{order._id}
                   </td>
-                  <td className="p-4">{order.user.name}</td>
+                  <td className="p-4">{order.user?.name || "Unknown"}</td>
                   <td className="p-4">${order.totalPrice.toFixed(2)}</td>
                   <td className="p-4">
                     <select
@@ -69,7 +77,8 @@ const OrderManagement = () => {
                   <td className="p-4">
                     <button
                       onClick={() => handleStatusChange(order._id, "Delivered")}
-                      className="text-white bg-green-500 hover:bg-green-600 font-medium rounded-lg text-sm px-4 py-2"
+                      disabled={order.status === "Delivered"}
+                      className="text-white bg-green-500 hover:bg-green-600 font-medium rounded-lg text-sm px-4 py-2 disabled:opacity-50"
                     >
                       Mark As Delivered
                     </button>
