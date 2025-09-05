@@ -5,6 +5,14 @@ const Product = require("../models/Product");
 const Order = require("../models/Order");
 const { protect } = require("../middleware/authMiddleware");
 const router = express.Router();
+const dotenv = require("dotenv").config();
+
+const Razorpay = require("razorpay");
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 router.post("/", protect, async (req, res) => {
   const { checkoutItems, shippingAddress, paymentMethod, totalPrice } =
@@ -13,6 +21,11 @@ router.post("/", protect, async (req, res) => {
     return res.status(400).json({ message: "no items in checkout" });
   }
   try {
+    const razorpayOrder = await razorpay.orders.create({
+      amount: Number(totalPrice) * 100, // Amount in paise
+      currency: "INR",
+      receipt: `receipt_${Date.now()}`,
+    });
     const newCheckout = await Checkout.create({
       user: req.user._id,
       checkoutItems: checkoutItems,
@@ -22,8 +35,11 @@ router.post("/", protect, async (req, res) => {
       paymentStatus: "pending",
       isPaid: false,
     });
+
     console.log(`Checkout created for user: ${req.user._id}`);
-    res.status(201).json(newCheckout);
+    res
+      .status(201)
+      .json({ newCheckout, razorpayOrder, key: process.env.RAZORPAY_KEY_ID });
   } catch (error) {
     console.error("Error Creating checkout session", error);
     res.status(500).json({ message: "Server Error" });
