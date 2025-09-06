@@ -10,7 +10,10 @@ const TopBar = () => {
           <a href="#" className="hover:text-gray-300">
             <FaMeta className="h-6 w-5" />
           </a>
-          <a href="#" className="hover:text-gray-300">
+          <a
+            href="https://www.instagram.com/_iam.yash17__/"
+            className="hover:text-gray-300"
+          >
             <FaInstagram className="h-5 w-5" />
           </a>
           <a href="#" className="hover:text-gray-300">

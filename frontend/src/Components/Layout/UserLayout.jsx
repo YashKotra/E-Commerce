@@ -5,14 +5,15 @@ import { Outlet } from "react-router-dom";
 
 const UserLayout = () => {
   return (
-    <div>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {/* Header */}
       <Header />
 
       {/* Main content */}
-      <main>
+      <main style={{ flex: 1 }}>
         <Outlet />
       </main>
+
       {/* Footer */}
       <Footer />
     </div>

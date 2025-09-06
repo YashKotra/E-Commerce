@@ -11,10 +11,11 @@ import Checkout from "./Components/Cart/Checkout";
 import OrderConfirmationPage from "./Pages/OrderConfirmationPage";
 import OrderDetails from "./Pages/OrderDetails";
 import MyOrdersPage from "./Pages/MyOrdersPage";
+import AboutUs from "./Pages/AboutUs";
 import AdminLayout from "./Components/Admin/AdminLayout";
 import UserManagement from "./Components/Admin/UserManagement";
 import ProductManagement from "./Components/Admin/ProductManagement";
-import AdminHomePage from "./Components/Admin/AdminHomePage"; 
+import AdminHomePage from "./Components/Admin/AdminHomePage";
 import EditProductPage from "./Components/Admin/EditProductPage";
 import OrderManagement from "./Components/Admin/OrderManagement";
 import ProtectedRoute from "./Components/Common/ProtectedRoute";
@@ -43,6 +44,7 @@ function App() {
             />
             <Route path="order/:id" element={<OrderDetails />} />
             <Route path="my-orders" element={<MyOrdersPage />} />
+            <Route path="AboutUs" element={<AboutUs />} />
           </Route>
 
           {/* Admin Routes */}

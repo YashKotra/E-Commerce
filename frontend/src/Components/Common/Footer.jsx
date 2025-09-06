@@ -52,27 +52,39 @@ export default function Footer() {
           <h3 className="text-xl font-semibold text-white mb-4">Shop</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <a href="#" className="hover:text-white transition">
+              <a href="/" className="hover:text-white transition">
                 Shop All
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition">
+              <a
+                href="/collections/all?category=Top+Wear&gender=Men"
+                className="hover:text-white transition"
+              >
                 Men’s Top Wear
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition">
+              <a
+                href="/collections/all?category=Top+Wear&gender=Women"
+                className="hover:text-white transition"
+              >
                 Women’s Top Wear
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition">
+              <a
+                href="collections/all?category=Bottom+Wear&gender=Men"
+                className="hover:text-white transition"
+              >
                 Men’s Bottom Wear
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition">
+              <a
+                href="collections/all?category=Bottom+Wear&gender=Women"
+                className="hover:text-white transition"
+              >
                 Women’s Bottom Wear
               </a>
             </li>
@@ -94,12 +106,12 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition">
-                Returns
+              <a href="/AboutUs" className="hover:text-white transition">
+                About Us
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition">
+              <a href="/my-orders" className="hover:text-white transition">
                 Order Status
               </a>
             </li>
