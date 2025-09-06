@@ -4,9 +4,9 @@ logs
 
 # Node.js
 node_modules
+node_modules
 
 # Local env files
-.env
 .env
 .env.local
 
