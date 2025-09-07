@@ -127,7 +127,7 @@ const products = [
     colors: ["White", "Gray"],
     collections: "Business Wear",
     material: "Cotton",
-    gender: "women",
+    gender: "Women",
     images: [
       {
         url: "https://images.pexels.com/photos/904117/pexels-photo-904117.jpeg",
