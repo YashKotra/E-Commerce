@@ -15,10 +15,10 @@ const products = [
     colors: ["Red", "Blue", "Yellow"],
     collections: "Business Casual",
     material: "Cotton",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=39",
+        url: "https://media.istockphoto.com/id/1397185406/photo/portrait-of-woman-smiling-against-wall-with-palm-tree-shade.jpg?b=1&s=612x612&w=0&k=20&c=LBLbgLlshEKtM8DBuvVjxrhGyG9ok9Cipj-O-siET-w=",
         altText: "Classic Oxford Button-Down Shirt Front View",
       },
       {
@@ -43,10 +43,10 @@ const products = [
     colors: ["Black", "Navy Blue", "Burgundy"],
     collections: "Formal Wear",
     material: "Cotton Blend",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=41",
+        url: "https://images.pexels.com/photos/1021693/pexels-photo-1021693.jpeg",
         altText: "Slim-Fit Stretch Shirt Front View",
       },
       {
@@ -71,10 +71,10 @@ const products = [
     colors: ["Light Blue", "Dark Wash"],
     collections: "Casual Wear",
     material: "Denim",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=43",
+        url: "https://images.pexels.com/photos/1839904/pexels-photo-1839904.jpeg",
         altText: "Casual Denim Shirt Front View",
       },
       {
@@ -99,10 +99,10 @@ const products = [
     colors: ["Tropical Print", "Navy Palms"],
     collections: "Vacation Wear",
     material: "Viscose",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=45",
+        url: "https://images.pexels.com/photos/1839904/pexels-photo-1839904.jpeg",
         altText: "Printed Resort Shirt Front View",
       },
       {
@@ -127,10 +127,10 @@ const products = [
     colors: ["White", "Gray"],
     collections: "Business Wear",
     material: "Cotton",
-    gender: "Men",
+    gender: "women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=47",
+        url: "https://images.pexels.com/photos/904117/pexels-photo-904117.jpeg",
         altText: "Slim-Fit Easy-Iron Shirt Front View",
       },
       {
@@ -155,10 +155,10 @@ const products = [
     colors: ["White", "Navy", "Red"],
     collections: "Casual Wear",
     material: "Cotton",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=3",
+        url: "https://images.pexels.com/photos/247204/pexels-photo-247204.jpeg",
         altText: "Polo T-Shirt Front View",
       },
       {
@@ -183,10 +183,10 @@ const products = [
     colors: ["Black", "Gray"],
     collections: "Streetwear",
     material: "Cotton",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=5",
+        url: "https://images.pexels.com/photos/852860/pexels-photo-852860.jpeg",
         altText: "Oversized Graphic T-Shirt Front View",
       },
     ],
@@ -207,10 +207,10 @@ const products = [
     colors: ["Heather Gray", "Olive", "Black"],
     collections: "Casual Wear",
     material: "Cotton Blend",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=6",
+        url: "https://media.istockphoto.com/id/1293903541/photo/young-woman-stock-photo.jpg?b=1&s=612x612&w=0&k=20&c=290NqqQDB6VU2MhvfgMclU4BO-unVRrewO6urisjCcE=",
         altText: "Regular-Fit Henley Shirt Front View",
       },
     ],
@@ -231,10 +231,10 @@ const products = [
     colors: ["Charcoal", "Dark Green", "Navy"],
     collections: "Winter Essentials",
     material: "Cotton",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=7",
+        url: "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg",
         altText: "Long-Sleeve Thermal Tee Front View",
       },
     ],
@@ -255,10 +255,10 @@ const products = [
     colors: ["White", "Black", "Navy"],
     collections: "Basics",
     material: "Cotton",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=8",
+        url: "https://images.pexels.com/photos/1090387/pexels-photo-1090387.jpeg",
         altText: "V-Neck Classic T-Shirt Front View",
       },
     ],
@@ -279,10 +279,10 @@ const products = [
     colors: ["Black", "Gray", "Navy"],
     collections: "Casual Collection",
     material: "Cotton Blend",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=9",
+        url: "https://images.pexels.com/photos/2043590/pexels-photo-2043590.jpeg",
         altText: "Slim Fit Joggers Front View",
       },
     ],
@@ -303,10 +303,10 @@ const products = [
     colors: ["Olive", "Black"],
     collections: "Urban Collection",
     material: "Cotton",
-    gender: "Men",
+    gender: "Women",
     images: [
       {
-        url: "https://picsum.photos/500/500?random=10",
+        url: "https://images.pexels.com/photos/33794823/pexels-photo-33794823.jpeg",
         altText: "Cargo Joggers Front View",
       },
     ],
