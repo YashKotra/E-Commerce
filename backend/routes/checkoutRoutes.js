@@ -22,7 +22,8 @@ router.post("/", protect, async (req, res) => {
   }
   try {
     const razorpayOrder = await razorpay.orders.create({
-      amount: Number(totalPrice) * 100, // Amount in paise
+      amount: Math.round(Number(totalPrice) * 100),
+      // Amount in paise
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     });
