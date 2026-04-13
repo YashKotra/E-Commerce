@@ -62,6 +62,12 @@ const Navbar = () => {
         >
           BOTTOM WEAR
         </Link>
+        <Link
+          to="/AboutUs"
+          className="text-sm font-medium uppercase text-gray-700 hover:text-black"
+        >
+          ABOUT US
+        </Link>
       </div>
 
       {/* Right Icons */}
